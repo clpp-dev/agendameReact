@@ -61,6 +61,14 @@ export const postCreateEvent = async (body) => {
   return response;
 };
 
+export const postloginUser = async (body) => {
+  const response = await axiosInstance.post(
+    'event',
+    body
+  );
+  return response;
+};
+
 
 
 // PUT

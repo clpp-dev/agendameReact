@@ -113,7 +113,7 @@ export const EditEventPage = () => {
           </div>
           <div className='d-grid'>
             <button
-              type='submit '
+              type='submit'
               className='btn btn-primary m-2 p-2 mt-2 pt-2 pb-2 text-light fw-bold fs-4'
               style={{ backgroundColor: '#5405EF', borderColor: '#fff' }}
             >
