@@ -3,7 +3,7 @@ import Lottie from 'lottie-react';
 import LoginAnimation from '../../../Assets/Animations/LoginAstronaut.json';
 import { useForm } from 'react-hook-form';
 import { NavLink } from 'react-router-dom';
-import { postloginUser } from '../../Services/services';
+import { postLoginUser } from '../../Services/services';
 
 export const LoginPage = () => {
   const [email, setEmail] = useState();
@@ -22,9 +22,8 @@ export const LoginPage = () => {
       email: email ? email : '' ,
       password: password ? password : '',
     };
-    console.log('🚀 > > > > onSubmit > > > > payloadLogin', payloadLogin);
-    // const responseUpdateEvent = await postloginUser(payloadLogin);
-    // console.log('🚀 > > > > onSubmit > > > > responseUpdateEvent', responseUpdateEvent);
+    const responseUpdateEvent = await postLoginUser(payloadLogin);
+    console.log('🚀 > > > > onSubmit > > > > responseUpdateEvent', responseUpdateEvent);
   };
 
   return (
