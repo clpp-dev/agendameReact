@@ -6,9 +6,12 @@ import searchAnimation from '../../../Assets/Animations/search.json';
 import useGetEventsByUser from '../../Hooks/useGetEventsByUser';
 import useGetOneUser from '../../Hooks/useGetOneUser';
 import { deleteEvent } from '../../Services/services';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 export const DashboardPage = () => {
+  const navigate = useNavigate();
+
   const idTemp = '637a5989b47e78340dece462';
 
   const idTempEvent = '63803af0ce61148914f09716';
@@ -17,7 +20,24 @@ export const DashboardPage = () => {
   
   const responseUserInSesion = useGetOneUser({_id: idTemp})
 
-  const responseDELETE = deleteEvent(idTempEvent)
+  const handleDelete = (id) => {
+    try {
+      const responseDELETE = deleteEvent(id)
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Evento Eliminado!',
+      });
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Ups...!',
+        text: 'Hubo un error al eliminar el evento, intente nuevamente.',
+      });
+    }
+  }
 
   return (
     <div className='d-flex justify-content-center'>
@@ -70,7 +90,7 @@ export const DashboardPage = () => {
                     className='col btn btn-danger d-sm-grid mb-1 m-1 fw-bold d-flex flex-column justify-content-center'
                     onClick={() =>{
                       console.log(`Eliminado! item de id: ${item._id}` );
-                      deleteEvent(item._id)
+                      handleDelete(item._id)
                     }
                     }
                   >

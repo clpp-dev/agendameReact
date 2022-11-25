@@ -1,8 +1,11 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { postCreateEvent } from '../../Services/services';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 export const NewEventPage = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -20,8 +23,27 @@ export const NewEventPage = () => {
       date: data.date,
       place: data.place,
     }
-    const responseUpdateEvent = await postCreateEvent(payloadRegisterNewEvent);
-    console.log('🚀 > > > > onSubmit > > > > responseUpdateEvent', responseUpdateEvent);
+
+    try {
+      const responseUpdateEvent = await postCreateEvent(payloadRegisterNewEvent);
+      console.log('🚀 > > > > onSubmit > > > > responseUpdateEvent', responseUpdateEvent);
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Evento creado correctamente!',
+      });
+      navigate('/dashboard');
+      return;
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Ups...!',
+        text: 'Hubo un error inesperado, intente nuevamente.',
+      });
+    }
+
+
   };
 
 

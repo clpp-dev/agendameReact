@@ -2,28 +2,43 @@ import React, { useState } from 'react';
 import Lottie from 'lottie-react';
 import LoginAnimation from '../../../Assets/Animations/LoginAstronaut.json';
 import { useForm } from 'react-hook-form';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { postLoginUser } from '../../Services/services';
+import Swal from 'sweetalert2';
 
 export const LoginPage = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate();
+
   const {
-    register,
     handleSubmit,
-    watch,
-    setValue,
     formState: { errors },
   } = useForm();
 
   const onSubmit = async () => {
     const payloadLogin = {
-      email: email ? email : '' ,
+      email: email ? email : '',
       password: password ? password : '',
     };
-    const responseUpdateEvent = await postLoginUser(payloadLogin);
-    console.log('🚀 > > > > onSubmit > > > > responseUpdateEvent', responseUpdateEvent);
+    try {
+      const responseUpdateEvent = await postLoginUser(payloadLogin);
+      console.log(
+        '🚀 > > > > onSubmit > > > > responseUpdateEvent',
+        responseUpdateEvent
+      );
+      if (responseUpdateEvent.status === 200) {
+        navigate('dashboard');
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: 'warning',
+        title: 'Ups...!',
+        text: 'Usuario no encontrado',
+      });
+    }
   };
 
   return (
@@ -44,7 +59,7 @@ export const LoginPage = () => {
               id='floatingInput'
               placeholder='E-mail'
               value={email}
-              onChange={(e)=> setEmail(e?.target?.value)}
+              onChange={(e) => setEmail(e?.target?.value)}
             />
 
             <label htmlFor='floatingInput'>E-mail*</label>
@@ -57,8 +72,7 @@ export const LoginPage = () => {
               id='floatingPassword'
               placeholder='Password'
               value={password}
-              onChange={(e)=> setPassword(e?.target?.value)}
-              
+              onChange={(e) => setPassword(e?.target?.value)}
             />
 
             <label htmlFor='floatingPassword'>Contraseña*</label>

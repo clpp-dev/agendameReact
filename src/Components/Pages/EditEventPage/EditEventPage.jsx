@@ -1,13 +1,14 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useGetOneEvent from '../../Hooks/useGetOneEvent';
 import { putEditEvent } from '../../Services/services';
+import Swal from 'sweetalert2';
 
 export const EditEventPage = () => {
+  
+  const navigate = useNavigate();
   const { id } = useParams();
-
-  const responseSearchEvent = useGetOneEvent({ _id: id });
   
   const {
     register,
@@ -17,24 +18,45 @@ export const EditEventPage = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (data) => {
-    const payloadUdateEvent = {
-      description : data.description,
-      hour: data.hour,
-      date: data.date,
-      place: data.place,
-    }
-    const responseUpdateEvent = await putEditEvent(id, payloadUdateEvent);
-    console.log('🚀 > > > > onSubmit > > > > responseUpdateEvent', responseUpdateEvent);
-  };
-
-
+  const responseSearchEvent = useGetOneEvent({ _id: id });
+  
   if (responseSearchEvent.status === 200) {
     setValue('description', responseSearchEvent?.data?.description);
     setValue('hour', responseSearchEvent?.data?.hour);
     setValue('date', responseSearchEvent?.data?.date);
     setValue('place', responseSearchEvent?.data?.place);
   }
+
+  const onSubmit = async (data) => {
+    const payloadUdateEvent = {
+      description: data.description,
+      hour: data.hour,
+      date: data.date,
+      place: data.place,
+    };
+
+    try {
+      const responseUpdateEvent = await putEditEvent(id, payloadUdateEvent);
+      console.log(
+        '🚀 > > > > onSubmit > > > > responseUpdateEvent',
+        responseUpdateEvent
+      );
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Evento actualizado correctamente!',
+      });
+      navigate('/dashboard');
+      return;
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Ups...!',
+        text: 'HUbo un error inesperado, intente nuevamente.',
+      });
+    }
+  };
 
   const today = new Date();
 
@@ -53,7 +75,6 @@ export const EditEventPage = () => {
             Editar evento
           </h2>
           <div className='form-floating mb-3'>
-
             <input
               type='text'
               id='floatingInput'
@@ -68,7 +89,6 @@ export const EditEventPage = () => {
             <label htmlFor='floatingInput'>Descripción</label>
           </div>
           <div className='form-floating mb-3'>
-
             <input
               type='time'
               id='floatingInput'
@@ -82,7 +102,6 @@ export const EditEventPage = () => {
             <label htmlFor='floatingInput'>Hora</label>
           </div>
           <div className='form-floating mb-3'>
-
             <input
               type='date'
               id='floatingInput'
@@ -97,7 +116,6 @@ export const EditEventPage = () => {
             <label htmlFor='floatingInput '>Fecha</label>
           </div>
           <div className='form-floating mb-3'>
-
             <input
               type='text'
               id='floatingInput'

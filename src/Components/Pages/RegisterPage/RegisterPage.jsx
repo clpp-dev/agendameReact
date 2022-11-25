@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { NavLink } from 'react-router-dom';
 import { postCreateUser } from '../../Services/services';
+import Swal from 'sweetalert2';
 
 export const RegisterPage = () => {
   const [name, setName] = useState('');
@@ -12,25 +13,37 @@ export const RegisterPage = () => {
   const [password, setPassword] = useState('');
 
   const {
-    register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
   const onSubmitRegister = async (data) => {
     const payloadRegisterNewUser = {
       nombre: name ? name : '',
-      apellidos: lastName ? lastName: '',
+      apellidos: lastName ? lastName : '',
       edad: age ? age : 0,
       ocupacion: job ? job : '',
       email: email ? email : '',
       password: password ? password : '',
     };
 
-    const responseCreateUser = await postCreateUser(payloadRegisterNewUser);
-    if (responseCreateUser?.status === 201){
-      alert('Usuario creado correctamente!')
+    try {
+      const responseCreateUser = await postCreateUser(payloadRegisterNewUser);
+      if (responseCreateUser?.status === 201) {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Usuario creado correctamente!',
+        });
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Ups...!',
+        text: 'Hubo un error inesperado, intente nuevamente.',
+      });
     }
   };
 
@@ -107,7 +120,7 @@ export const RegisterPage = () => {
               placeholder='email'
               className='form-control fw-bold'
               value={email}
-              onChange={(e)=> setEmail(e?.target?.value)}
+              onChange={(e) => setEmail(e?.target?.value)}
             />
             <label htmlFor='floatingInput'>E-mail*</label>
           </div>
@@ -120,7 +133,7 @@ export const RegisterPage = () => {
               id='floatingPassword'
               placeholder='Password'
               value={password}
-              onChange={(e)=> setPassword(e?.target?.value)}
+              onChange={(e) => setPassword(e?.target?.value)}
             />
             <label htmlFor='floatingPassword'>Contraseña*</label>
           </div>
