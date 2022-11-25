@@ -1,12 +1,26 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
+import { postCreateUser } from "../../Services/services";
 
 export const RegisterPage = () => {
   
   const { register, handleSubmit, watch ,formState : { errors } } = useForm();
   
-  const customSubmit = data => console.log(data);
+  const onSubmitRegister = async (data) => {
+    alert(data)
+    const payloadRegisterNewUser = {
+      username: data.username,
+      nombre: data.name,
+      apellidos: data.lastName,
+      edad: data.age,
+      ocupacion: data.job,
+      email: data.email,
+      password: data.password,
+    }
+    const responseCreateUser= await postCreateUser(payloadRegisterNewUser);
+    console.log('🚀 > > > > onSubmit > > > > responseCreateUser', responseCreateUser);
+  };
 
   return (
     <div
@@ -16,51 +30,59 @@ export const RegisterPage = () => {
       <div className="col-xl-7 justify-content-lg-center mt-0 mb-0 pb-1 bg-gradient-primary rounded">
         <h2 className="h2 text-center mb-3 fw-bold text-light">Regístrate Ahora</h2>
 
-        <form onSubmit={handleSubmit(customSubmit)} className="fw-bold">
+        <form onSubmit={handleSubmit(onSubmitRegister)} className="fw-bold">
           <div className="form-floating mb-3">
             <input
-              type="text"
-              name="nombre"
-              className="form-control fw-bold"
-              id="floatingInput"
-              placeholder="Nombre"
-              required
+              type='text'
+              id='floatingInput'
+              placeholder='Nombres'
+              className='form-control fw-bold'
+              {...register('name', {
+                required: true,
+                minLength: 3,
+              })}
             />
             <label htmlFor="floatingInput">Nombre*</label>
           </div>
 
           <div className="form-floating mb-3">
-            <input
-              type="text"
-              name="apellido"
-              className="form-control fw-bold"
-              id="floatingInput"
-              placeholder="Apellido"
-              required
+          <input
+              type='text'
+              id='floatingInput'
+              placeholder='Apellidos'
+              className='form-control fw-bold'
+              {...register('lastName', {
+                required: true,
+                minLength: 3,
+              })}
             />
             <label htmlFor="floatingInput">Apellido*</label>
           </div>
 
           <div className="form-floating mb-3">
-            <input
-              type="number"
-              name="edad"
-              className="form-control fw-bold"
-              id="floatingInput"
-              placeholder="Edad"
-              required
+          <input
+              type='number'
+              id='floatingInput'
+              placeholder='Edad'
+              className='form-control fw-bold'
+              {...register('age', {
+                required: true,
+                minLength: 3,
+              })}
             />
             <label htmlFor="floatingInput">Edad*</label>
           </div>
 
           <div className="form-floating mb-3">
-            <input
-              type="text"
-              name="ocupacion"
-              className="form-control fw-bold"
-              id="floatingInput"
-              placeholder="Ocupacion"
-              required
+          <input
+              type='text'
+              id='floatingInput'
+              placeholder='Ocupacion'
+              className='form-control fw-bold'
+              {...register('job', {
+                required: true,
+                minLength: 3,
+              })}
             />
             <label htmlFor="floatingInput">Ocupación*</label>
           </div>
@@ -68,17 +90,17 @@ export const RegisterPage = () => {
           <div className="form-floating mb-3">
             <input
               type="email"
-              name="email"
-              className="form-control fw-bold"
               id="floatingInput"
               placeholder="email"
-              {...register("emailRegister",{
+              className="form-control fw-bold"
+              {...register("email",{
                 required: true,
-                min: 10,
+                min: 50,
                 max: 100,
                 pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
               })}
             />
+
             {errors.email?.type === "required" &&
             <small className="fail text-white">No puede estar el campo vacio </small>}
             {errors.email?.type === "maxLength" &&
@@ -115,7 +137,7 @@ export const RegisterPage = () => {
 
           <div className="d-grid">
             <button
-              type="submit"
+              type='submit '
               className="btn btn-primary mt-2 pt-2 pb-2 fs-5 fw-bold rounded-pill"
             >
               Registrarse

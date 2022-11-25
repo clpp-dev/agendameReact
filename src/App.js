@@ -3,6 +3,7 @@ import { Footer } from "./Components/Layout/Footer/Footer";
 import { HeaderWithOutLogin } from "./Components/Layout/HeaderWithOutLogin/HeaderWithOutLogin";
 import { NavBar } from "./Components/Layout/NavBar/NavBar";
 import { DashboardPage } from "./Components/Pages/dashboardPage/DashboardPage";
+import { EditEventPage } from "./Components/Pages/EditEventPage/EditEventPage";
 import { Home } from "./Components/Pages/Home/Home";
 import { LoginPage } from "./Components/Pages/LoginPage/LoginPage";
 import { NewEventPage } from "./Components/Pages/NewEventPage/NewEventPage";
@@ -23,7 +24,9 @@ function App() {
         <Route exact path="/login" element={<LoginPage />} />
         <Route exact path="/registro" element={<RegisterPage />} />
         <Route exact path="/dashboard" element={<DashboardPage />} />
+        <Route exact path="/editevent/:id" element={<EditEventPage />} />
         <Route exact path="/newevent" element={<NewEventPage />} />
+        <Route exact path="/editevent" element={<EditEventPage />} />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
       <Footer/>

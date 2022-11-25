@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import LogoAgendame from "../../../Assets/Img/logoAgenda.png"
 
 export const NavBar = () => {
@@ -40,12 +41,12 @@ export const NavBar = () => {
               </li>
 
               <li className="nav-item nav justify-content-center">
-                <a
+                <Link
                   className="nav-link h4 active fw-bold text-light"
-                  href="/newevent"
+                  to="/newevent"
                 >
                   Nuevo Evento
-                </a>
+                </Link>
               </li>
 
               <li className="nav-item fw-bold nav justify-content-center align-self-center">

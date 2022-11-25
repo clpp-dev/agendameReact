@@ -1,8 +1,14 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { postCreateEvent } from '../../Services/services';
+import { useParams } from 'react-router-dom';
+import useGetOneEvent from '../../Hooks/useGetOneEvent';
+import { putEditEvent } from '../../Services/services';
 
-export const NewEventPage = () => {
+export const EditEventPage = () => {
+  const { id } = useParams();
+
+  const responseSearchEvent = useGetOneEvent({ _id: id });
+  
   const {
     register,
     handleSubmit,
@@ -10,20 +16,25 @@ export const NewEventPage = () => {
     setValue,
     formState: { errors },
   } = useForm();
-  
-  const onSubmitNewEvent = async (data) => {
-    const payloadRegisterNewEvent = {
-      username: 'clperez341',
-      idUser: '637a5989b47e78340dece462',
+
+  const onSubmit = async (data) => {
+    const payloadUdateEvent = {
       description : data.description,
       hour: data.hour,
       date: data.date,
       place: data.place,
     }
-    const responseUpdateEvent = await postCreateEvent(payloadRegisterNewEvent);
+    const responseUpdateEvent = await putEditEvent(id, payloadUdateEvent);
     console.log('🚀 > > > > onSubmit > > > > responseUpdateEvent', responseUpdateEvent);
   };
 
+
+  if (responseSearchEvent.status === 200) {
+    setValue('description', responseSearchEvent?.data?.description);
+    setValue('hour', responseSearchEvent?.data?.hour);
+    setValue('date', responseSearchEvent?.data?.date);
+    setValue('place', responseSearchEvent?.data?.place);
+  }
 
   const today = new Date();
 
@@ -33,20 +44,20 @@ export const NewEventPage = () => {
         <form
           className='mt-6 p-5 mb-5 fw-bold w-100'
           style={{ backgroundColor: '#00000098', borderRadius: '15px' }}
-          onSubmit={handleSubmit(onSubmitNewEvent)}
+          onSubmit={handleSubmit(onSubmit)}
         >
           <h2
             className='text-center mb-3 text-light fw-bold'
             style={{ fontSize: '45px' }}
           >
-            Nuevo evento
+            Editar evento
           </h2>
           <div className='form-floating mb-3'>
-            
+
             <input
               type='text'
               id='floatingInput'
-              placeholder='Hora'
+              placeholder='Descripción'
               className='form-control fw-bold'
               {...register('description', {
                 required: true,
@@ -57,7 +68,7 @@ export const NewEventPage = () => {
             <label htmlFor='floatingInput'>Descripción</label>
           </div>
           <div className='form-floating mb-3'>
-            
+
             <input
               type='time'
               id='floatingInput'
@@ -71,10 +82,11 @@ export const NewEventPage = () => {
             <label htmlFor='floatingInput'>Hora</label>
           </div>
           <div className='form-floating mb-3'>
+
             <input
               type='date'
               id='floatingInput'
-              placeholder='Hora'
+              placeholder='Fecha'
               className='form-control fw-bold'
               min={today}
               {...register('date', {
@@ -85,6 +97,7 @@ export const NewEventPage = () => {
             <label htmlFor='floatingInput '>Fecha</label>
           </div>
           <div className='form-floating mb-3'>
+
             <input
               type='text'
               id='floatingInput'
@@ -104,7 +117,7 @@ export const NewEventPage = () => {
               className='btn btn-primary m-2 p-2 mt-2 pt-2 pb-2 text-light fw-bold fs-4'
               style={{ backgroundColor: '#5405EF', borderColor: '#fff' }}
             >
-              Agregar Evento
+              Guardar
             </button>
           </div>
         </form>
